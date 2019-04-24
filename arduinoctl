@@ -1,0 +1,46 @@
+#!/bin/bash
+
+function usage() {
+  echo "arduinoctl - helper to reflash firmware"
+  echo "sub-commands:"
+  echo "     flash HEX_FILE  - flashes the provided firmware (.hex file)"
+}
+
+function flash_arduino() {
+  echo "erasing old firmware..."
+  sudo dfu-programmer atmega16u2 erase --force
+  echo ""
+
+  echo "flashing new firmware $(basename $1)..."
+  sudo dfu-programmer atmega16u2 flash $1
+  echo ""
+  
+  echo "reseting new firmware..."
+  sudo dfu-programmer atmega16u2 reset
+  echo ""
+}
+
+cmd=$1
+case $cmd in
+  "flash")
+    filename=$2
+
+    if [ ! -f $filename ]; then
+      echo "firmware file $filename doesn't exist."
+      exit 1
+    elif [ -z $filename ]; then
+      echo "you must provide a firmware file."
+      exit 1
+    else
+      flash_arduino $filename
+    fi
+    ;;
+  "")
+    usage
+    ;;
+  *)
+    echo "Error: '$cmd' is not valid." >&2
+    usage
+    exit 1
+    ;;
+esac
