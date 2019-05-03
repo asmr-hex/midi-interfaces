@@ -2,19 +2,18 @@
 #include <Adafruit_Sensor.h>
 #include <MIDI.h>
 
-#include "src/sensors/orientation.h"
-#include "src/sensors/flex.h"
+#include "src/glove.h"
+#include "src/config.h"
 
 
-bool DEBUG = true;
-sensor::Orientation *orientationSensor;
-sensor::Flex *flexSensor;
+Config *config = new Config(true);
+Glove *glove = new Glove();
 
 // initialize default midi instance
 MIDI_CREATE_DEFAULT_INSTANCE();
 
 void setup() {
-  if ( !DEBUG ) {
+  if ( config->debug ) {
     // in non-test situations, this microcontroller communicates via MIDI
     MIDI.begin();
   } else {
@@ -22,36 +21,36 @@ void setup() {
     Serial.begin(9600);
   }
 
-  orientationSensor = new sensor::Orientation();
-  flexSensor = new sensor::Flex();
+  /* orientationSensor = new sensor::Orientation(); */
+  /* flexSensor = new sensor::Flex(); */
 }
 
-int last = 0;
-int thresh = 3;//30;
-int maxInput = 270;
-int minInput = 110;
-int maxOutput = 127;//10000;
+/* int last = 0; */
+/* int thresh = 3;//30; */
+/* int maxInput = 270; */
+/* int minInput = 110; */
+/* int maxOutput = 127;//10000; */
 
 void loop() {
 
-  int rawInputs[] = {analogRead(A0), analogRead(A1), analogRead(A2), analogRead(A3), analogRead(A4)};
-  int idx = 0;
-  for (const int rawInput : rawInputs) {
-    int reading = constrain(rawInput, minInput, maxInput);
-    int v = map((maxInput - reading) + minInput, minInput, maxInput, 0, maxOutput);
-    Serial.print("\t");
-    Serial.print(idx);
-    Serial.print(": ");
-    Serial.print(rawInput);
+  /* int rawInputs[] = {analogRead(A0), analogRead(A1), analogRead(A2), analogRead(A3), analogRead(A4)}; */
+  /* int idx = 0; */
+  /* for (const int rawInput : rawInputs) { */
+  /*   int reading = constrain(rawInput, minInput, maxInput); */
+  /*   int v = map((maxInput - reading) + minInput, minInput, maxInput, 0, maxOutput); */
+  /*   Serial.print("\t"); */
+  /*   Serial.print(idx); */
+  /*   Serial.print(": "); */
+  /*   Serial.print(rawInput); */
 //    if (v >= lasts[idx] + thresh || v <= lasts[idx] - thresh) {
 //      Serial.println(v);
 //      last = v;
 //    }
-    idx++;
-  }
+  /*   idx++; */
+  /* } */
 
-  Serial.println("");
-  delay(500);
+  /* Serial.println(""); */
+  /* delay(500); */
   
 //  int reading = constrain(analogRead(A0), minInput, maxInput);
 //  int v = map((maxInput - reading) + minInput, minInput, maxInput, 0, maxOutput);
