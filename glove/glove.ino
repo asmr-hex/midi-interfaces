@@ -1,33 +1,17 @@
 #include <Adafruit_BNO055.h>
 #include <Adafruit_Sensor.h>
 #include <MIDI.h>
+
 #include "src/sensors/orientation.h"
+#include "src/sensors/flex.h"
 
 
 bool DEBUG = true;
-OrientationSensor *orientationSensor;
+sensor::Orientation *orientationSensor;
+sensor::Flex *flexSensor;
 
 // initialize default midi instance
 MIDI_CREATE_DEFAULT_INSTANCE();
-
-/* Adafruit_BNO055 newOrientationSensor() { */
-/*   // create new sensor instance */
-/*   Adafruit_BNO055 sensor = Adafruit_BNO055(55); */
-
-/*   // initialize the sensor */
-/*   if ( !sensor.begin() && DEBUG ) { */
-/*     Serial.print("Oh No! BNO055 sensor was not detected...check your wiring or I2C ADDR! ;D"); */
-/*     while(1); */
-/*   } */
-
-/*   // wait for a second. */
-/*   delay(1000); */
-
-/*   // set sensor to use an external clock (Arduino clock) */
-/*   sensor.setExtCrystalUse(true); */
-
-/*   return sensor; */
-/* } */
 
 void setup() {
   if ( !DEBUG ) {
@@ -38,7 +22,8 @@ void setup() {
     Serial.begin(9600);
   }
 
-  orientationSensor = new OrientationSensor();
+  orientationSensor = new sensor::Orientation();
+  flexSensor = new sensor::Flex();
 }
 
 int last = 0;
@@ -48,18 +33,6 @@ int minInput = 110;
 int maxOutput = 127;//10000;
 
 void loop() {
-
-  /* Get a new sensor event */ 
-  sensors_event_t event; 
-  orientationSensor->getEvent(&event);
-  
-  /* Display the floating point data */
-  Serial.print("X: ");
-  Serial.print(event.orientation.x, 4);
-  Serial.print("\tY: ");
-  Serial.print(event.orientation.y, 4);
-  Serial.print("\tZ: ");
-  Serial.print(event.orientation.z, 4);
 
   int rawInputs[] = {analogRead(A0), analogRead(A1), analogRead(A2), analogRead(A3), analogRead(A4)};
   int idx = 0;

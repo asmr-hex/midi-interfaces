@@ -3,15 +3,23 @@
 
 #include <Adafruit_BNO055.h>
 #include <Adafruit_Sensor.h>
+#include "config.h"
 
-// struct Threshold {
-//   int min;
-//   int max;
-// };
 
-class OrientationSensor : public Adafruit_BNO055 {
-public:
-  OrientationSensor();
-};
+namespace sensor {
+  
+  class Orientation : public Adafruit_BNO055 {
+  public:
+    
+    Orientation(sensor::Config config = {});
+    void read();
+
+    sensor::Config config;
+    double x = 0.0;
+    double y = 0.0;
+    double z = 0.0;
+  };
+  
+}
 
 #endif
