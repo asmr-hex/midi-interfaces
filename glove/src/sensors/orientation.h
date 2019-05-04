@@ -3,18 +3,23 @@
 
 #include <Adafruit_BNO055.h>
 #include <Adafruit_Sensor.h>
-#include "config.h"
+#include "sensor.h"
 
 
 namespace sensor {
   
-  class Orientation : public Adafruit_BNO055 {
+  class Orientation : public Adafruit_BNO055, public sensor::Sensor {
   public:
     
-    Orientation(sensor::Config config = {});
+    Orientation(midi::MidiInterface<HardwareSerial>* midi_interface,
+                sensor::MidiDispatcher dispatch=sensor::default_midi_dispatcher,
+                sensor::range_t input_range={0, 127},
+                sensor::range_t output_range={0, 127},
+                bool invert_values=false,
+                bool debug=false);
     void read();
+    void send();
 
-    sensor::Config config;
     double x = 0.0;
     double y = 0.0;
     double z = 0.0;

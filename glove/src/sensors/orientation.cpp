@@ -1,14 +1,26 @@
 #include <Arduino.h>
+#include <Adafruit_BNO055.h>
 #include <Adafruit_Sensor.h>
 #include "orientation.h"
-#include "config.h"
+#include "sensor.h"
 
 
-sensor::Orientation::Orientation(sensor::Config config)
-  : Adafruit_BNO055(55), config(config)
+sensor::Orientation::Orientation(midi::MidiInterface<HardwareSerial>* midi_interface,
+                                 sensor::MidiDispatcher dispatch,
+                                 sensor::range_t input_range,
+                                 sensor::range_t output_range,
+                                 bool invert_values,
+                                 bool debug)
+  : Adafruit_BNO055(55),
+    sensor::Sensor(midi_interface,
+                   dispatch,
+                   input_range,
+                   output_range,
+                   invert_values,
+                   debug)
 {
   // in order to proceed, we must wait until the orientation sensor has been detected.
-  if ( !this->begin() && this->config.debug ) {
+  if ( !this->begin() && this->debug ) {
     Serial.print("Yikes! BNO055 sensor was not detected...check your wiring or I2C ADDR!");
     while(1);
   }
@@ -30,4 +42,8 @@ void sensor::Orientation::read() {
   this->x = event.orientation.x;
   this->y = event.orientation.y;
   this->z = event.orientation.z;
+}
+
+void sensor::Orientation::send() {
+  this->dispatch(this->midi_interface);
 }

@@ -5,67 +5,22 @@
 #include "src/glove.h"
 #include "src/config.h"
 
-
-Config *config = new Config(true);
-Glove *glove = new Glove();
-
-// initialize default midi instance
-MIDI_CREATE_DEFAULT_INSTANCE();
+// declare global glove
+Glove *glove;
 
 void setup() {
-  if ( config->debug ) {
-    // in non-test situations, this microcontroller communicates via MIDI
-    MIDI.begin();
-  } else {
-    // in testing situations, we communicate via serial
-    Serial.begin(9600);
-  }
+  // create configuration
+  Config *config = new Config(true // debug
+                              );
 
-  /* orientationSensor = new sensor::Orientation(); */
-  /* flexSensor = new sensor::Flex(); */
+  // instantiate new glove
+  glove = new Glove(config);
+
+  // setup glove
+  glove->setup();
 }
 
-/* int last = 0; */
-/* int thresh = 3;//30; */
-/* int maxInput = 270; */
-/* int minInput = 110; */
-/* int maxOutput = 127;//10000; */
-
 void loop() {
-
-  /* int rawInputs[] = {analogRead(A0), analogRead(A1), analogRead(A2), analogRead(A3), analogRead(A4)}; */
-  /* int idx = 0; */
-  /* for (const int rawInput : rawInputs) { */
-  /*   int reading = constrain(rawInput, minInput, maxInput); */
-  /*   int v = map((maxInput - reading) + minInput, minInput, maxInput, 0, maxOutput); */
-  /*   Serial.print("\t"); */
-  /*   Serial.print(idx); */
-  /*   Serial.print(": "); */
-  /*   Serial.print(rawInput); */
-//    if (v >= lasts[idx] + thresh || v <= lasts[idx] - thresh) {
-//      Serial.println(v);
-//      last = v;
-//    }
-  /*   idx++; */
-  /* } */
-
-  /* Serial.println(""); */
-  /* delay(500); */
-  
-//  int reading = constrain(analogRead(A0), minInput, maxInput);
-//  int v = map((maxInput - reading) + minInput, minInput, maxInput, 0, maxOutput);
-//  
-//  if (v >= last + thresh || v <= last - thresh) {
-//    Serial.println(v);
-//    // MIDI.sendPitchBend(v, 1);
-//    last = v;
-//  }
-
-//  int r = constrain(analogRead(A0), 150, 350);
-//  int V = map((350 - r) + 150, 150, 350, 0, 127);
-//  if (V >= last + 3 || V <= last - 3) {
-//    Serial.println(V);
-//    last = V;
-//  }
-
+  // read from glove sensors and dispatch values
+  glove->read_and_dispatch();
 }
