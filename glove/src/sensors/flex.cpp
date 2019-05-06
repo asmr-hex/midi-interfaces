@@ -28,5 +28,13 @@ void sensor::Flex::read() {
 
 void sensor::Flex::send() {
   // run dispatcher by injecting the midi interface
-  this->dispatch(this->midi_interface);
+  (*this.*dispatcher)();
+}
+
+void sensor::Flex::debug_dispatcher() {
+  Serial.println("SERIALLLLL");
+}
+
+void sensor::Flex::weird_dispatcher() {
+  Serial.println("WEIRDOOOOO");
 }

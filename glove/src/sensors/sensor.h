@@ -8,10 +8,12 @@
 namespace sensor {
 
   // midi dispatcher function type
-  typedef void (*MidiDispatcher)(midi::MidiInterface<HardwareSerial>*);
+  // typedef void (*MidiDispatcher)(midi::MidiInterface<HardwareSerial>*);
+
+  // typedef void (Sensor::*MidiDispatcher)();
 
   // default midi dispatcher
-  void default_midi_dispatcher(midi::MidiInterface<HardwareSerial>* m) {}
+  // void default_midi_dispatcher(midi::MidiInterface<HardwareSerial>* m);
 
   // range_t defines a one-dimensional value range.
   struct range_t {
@@ -22,7 +24,6 @@ namespace sensor {
   class Sensor {
   public:
     Sensor(midi::MidiInterface<HardwareSerial>* midi_interface,
-           MidiDispatcher dispatch,
            range_t input_range,
            range_t output_range,
            bool invert_values,
@@ -31,7 +32,6 @@ namespace sensor {
         output_range(output_range),
         invert_values(invert_values),
         midi_interface(midi_interface),
-        dispatch(dispatch),
         debug(debug)
     {}
 
@@ -39,7 +39,6 @@ namespace sensor {
     range_t output_range;
     bool invert_values;
     midi::MidiInterface<HardwareSerial>* midi_interface;
-    MidiDispatcher dispatch;
     bool debug;
   };
 

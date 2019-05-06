@@ -21,7 +21,7 @@ Glove::Glove(Config config)
   for (byte i = 0; i < n; i++) {
     fingers[i] = new sensor::Flex(pins[i],
                                   midi_interface,
-                                  sensor::default_midi_dispatcher,// this->config.dispatchers[dispatch_funcs::SerialPrint],
+                                  sensor::Flex::Weirdo,
                                   {400, 800},
                                   {400, 800},
                                   false,
@@ -34,11 +34,11 @@ Glove::Glove(Config config)
 
 void Glove::setup() {
   if ( this->config.debug ) {
-    // start midi interface
-    this->midi_interface->begin();
-  } else {
     // start serial communication
     Serial.begin(9600);
+  } else {
+    // start midi interface
+    this->midi_interface->begin();
   }
 }
 

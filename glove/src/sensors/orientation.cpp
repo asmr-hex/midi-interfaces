@@ -6,14 +6,12 @@
 
 
 sensor::Orientation::Orientation(midi::MidiInterface<HardwareSerial>* midi_interface,
-                                 sensor::MidiDispatcher dispatch,
                                  sensor::range_t input_range,
                                  sensor::range_t output_range,
                                  bool invert_values,
                                  bool debug)
   : Adafruit_BNO055(55),
     sensor::Sensor(midi_interface,
-                   dispatch,
                    input_range,
                    output_range,
                    invert_values,
@@ -45,5 +43,5 @@ void sensor::Orientation::read() {
 }
 
 void sensor::Orientation::send() {
-  this->dispatch(this->midi_interface);
+  //this->dispatch;
 }

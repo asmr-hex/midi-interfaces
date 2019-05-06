@@ -12,7 +12,6 @@ namespace sensor {
   public:
     
     Orientation(midi::MidiInterface<HardwareSerial>* midi_interface,
-                sensor::MidiDispatcher dispatch=sensor::default_midi_dispatcher,
                 sensor::range_t input_range={0, 127},
                 sensor::range_t output_range={0, 127},
                 bool invert_values=false,
