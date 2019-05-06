@@ -9,11 +9,12 @@ namespace sensor {
 
   class Flex : public sensor::Sensor {
   public:
-    enum dispatcher_t {Debug, Weirdo};
+
+    enum class DispatcherType {Debug, Weirdo};
 
     Flex(byte pin,
          midi::MidiInterface<HardwareSerial>* midi_interface,
-         dispatcher_t dispatcher_type=Flex::Debug,
+         DispatcherType dispatcher_type=DispatcherType::Debug,
          sensor::range_t input_range={0, 127},
          sensor::range_t output_range={0, 127},
          bool invert_values=true,
@@ -25,10 +26,10 @@ namespace sensor {
                        invert_values,
                        debug)
     {
-      dispatchers[Flex::Debug] = &Flex::debug_dispatcher;
-      dispatchers[Flex::Weirdo] = &Flex::weird_dispatcher;
+      dispatchers[static_cast<int>(DispatcherType::Debug)] = &Flex::debug_dispatcher;
+      dispatchers[static_cast<int>(DispatcherType::Weirdo)] = &Flex::weird_dispatcher;
       
-      dispatcher = dispatchers[dispatcher_type];
+      dispatcher = dispatchers[static_cast<int>(dispatcher_type)];
     };
     void setDispatcher(int type);
     void read();
@@ -42,9 +43,12 @@ namespace sensor {
     Dispatcher dispatcher;
     
     byte pin;
-    int v=0;
+    int v = 0;
+    int previous_v = 0;
+    int delta_threshold = 5;
     
   private:
+    bool value_changed();
     int transform(int value);
 
     /* dispatchers */

@@ -3,7 +3,17 @@
 #include "flex.h"
 
 
+bool sensor::Flex::value_changed() {
+  if ( v >= delta_threshold + previous_v || v <= delta_threshold - previous_v ) {
+    return true;
+  }
+
+  return false;
+}
+
 int sensor::Flex::transform(int value) {
+
+  return value;
   // bound the value
   value = constrain(value, this->input_range.min, this->input_range.max);
 
@@ -27,12 +37,17 @@ void sensor::Flex::read() {
 }
 
 void sensor::Flex::send() {
-  // run dispatcher by injecting the midi interface
-  (*this.*dispatcher)();
+  if (this->value_changed()) {
+    // run dispatcher by injecting the midi interface
+    (*this.*dispatcher)();
+    previous_v = v;
+  }
 }
 
 void sensor::Flex::debug_dispatcher() {
-  Serial.println("SERIALLLLL");
+  Serial.print(this->pin - 54);
+  Serial.print(": ");
+  Serial.println(this->v);
 }
 
 void sensor::Flex::weird_dispatcher() {

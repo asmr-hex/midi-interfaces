@@ -21,9 +21,9 @@ Glove::Glove(Config config)
   for (byte i = 0; i < n; i++) {
     fingers[i] = new sensor::Flex(pins[i],
                                   midi_interface,
-                                  sensor::Flex::Weirdo,
-                                  {400, 800},
-                                  {400, 800},
+                                  sensor::Flex::DispatcherType::Debug,
+                                  {400, 1200},
+                                  {400, 1200},
                                   false,
                                   true);
   }
