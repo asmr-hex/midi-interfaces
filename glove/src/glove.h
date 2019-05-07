@@ -14,6 +14,7 @@ class Glove {
 public:
   Glove(Config config = {});
   void setup();
+  void calibrate(int seconds);
   void read_and_dispatch();
 
   Config config;
@@ -22,6 +23,8 @@ private:
   midi::MidiInterface<HardwareSerial> *midi_interface;
   sensor::Flex *fingers[5];
   sensor::Orientation *orientation;
+
+  int dt = 500; // ms
 };
 
 #endif

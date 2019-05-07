@@ -31,8 +31,9 @@ namespace sensor {
       
       dispatcher = dispatchers[static_cast<int>(dispatcher_type)];
     };
+    void calibrate(sensor::calibration_t calibration_bound);
     void setDispatcher(int type);
-    void read();
+    void read(bool do_transform=true);
     void send();
 
     // enum _DispatcherTypes {Serial, Weirdo};
@@ -44,11 +45,8 @@ namespace sensor {
     
     byte pin;
     int v = 0;
-    int previous_v = 0;
-    int delta_threshold = 5;
     
   private:
-    bool value_changed();
     int transform(int value);
 
     /* dispatchers */

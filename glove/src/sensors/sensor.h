@@ -21,6 +21,8 @@ namespace sensor {
     double min;
   };
 
+  enum calibration_t {CalibrateUpperBound, CalibrateLowerBound};
+  
   class Sensor {
   public:
     Sensor(midi::MidiInterface<HardwareSerial>* midi_interface,

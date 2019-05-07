@@ -23,7 +23,7 @@ Glove::Glove(Config config)
                                   midi_interface,
                                   sensor::Flex::DispatcherType::Debug,
                                   {400, 1200},
-                                  {400, 1200},
+                                  {0, 127},
                                   false,
                                   true);
   }
@@ -40,6 +40,71 @@ void Glove::setup() {
     // start midi interface
     this->midi_interface->begin();
   }
+
+  // calibrate fingers
+  this->calibrate(10);
+}
+
+void Glove::calibrate(int seconds) {
+  int timesteps = (seconds * 1000) / this->dt;
+  int split_timesteps = timesteps / 2;
+
+  Serial.print("Open your fist to calibrate finger sensors in ");
+  for (int i=3; i>0; i--) {
+    Serial.print(i);
+    Serial.print("...");
+
+    delay(1000);
+  }
+  Serial.print("CALIBRATING OPEN FIST");
+  
+  // calibrate upperbound
+  for (int t=0; t < split_timesteps; t++) {
+    for (sensor::Flex *finger : this->fingers) {
+      finger->calibrate(sensor::CalibrateUpperBound);
+    }
+
+    Serial.print(".");
+    delay(this->dt);
+  }
+
+  Serial.println("Success!");
+
+  Serial.print("Close your fist to calibrate finger sensors in ");
+  for (int i=3; i>0; i--) {
+    Serial.print(i);
+    Serial.print("...");
+
+    delay(1000);
+  }
+  Serial.print("CALIBRATING CLOSED FIST");
+  
+  // calibrate lowerbound
+  for (int t=0; t < split_timesteps; t++) {
+    for (sensor::Flex *finger : this->fingers) {
+      finger->calibrate(sensor::CalibrateLowerBound);
+    }
+
+    Serial.print(".");
+    delay(this->dt);
+  }
+
+  Serial.println("Success!");
+
+  Serial.println("");
+  Serial.println("====================== Calibrated Bounds ======================");
+  for (sensor::Flex *finger : this->fingers) {
+    Serial.print(finger->pin - 54);
+    Serial.print(":    { ");
+    Serial.print(finger->input_range.min);
+    Serial.print("   ");
+    Serial.print(finger->input_range.max);
+    Serial.println(" }");
+  }
+  Serial.println("===============================================================");
+  Serial.println("");
+
+  delay(3000);
 }
 
 // read all the connected sensors
@@ -49,6 +114,10 @@ void Glove::read_and_dispatch() {
     finger->read();
     finger->send();
   }
+
+  Serial.println("");
+
+  delay(this->dt);
 
   // read orientation sensor and send messages
   // this->orientation.read();

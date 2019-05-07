@@ -3,17 +3,23 @@
 #include "flex.h"
 
 
-bool sensor::Flex::value_changed() {
-  if ( v >= delta_threshold + previous_v || v <= delta_threshold - previous_v ) {
-    return true;
-  }
+void sensor::Flex::calibrate(sensor::calibration_t calibration_bound) {
+  // read value
+  this->read(false);
+  int new_value = this->v;
 
-  return false;
+  switch (calibration_bound) {
+  case sensor::CalibrateUpperBound:
+    this->input_range.max = (this->input_range.max + new_value) / 2;
+    break;
+  case sensor::CalibrateLowerBound:
+    this->input_range.min = (this->input_range.min + new_value) / 2;
+    break;
+  }
 }
 
 int sensor::Flex::transform(int value) {
 
-  return value;
   // bound the value
   value = constrain(value, this->input_range.min, this->input_range.max);
 
@@ -32,22 +38,26 @@ int sensor::Flex::transform(int value) {
   return value;
 }
 
-void sensor::Flex::read() {
-  this->v = this->transform(analogRead(this->pin));
+void sensor::Flex::read(bool do_transform) {
+  int new_value = analogRead(this->pin);
+
+  if (do_transform) {
+    new_value = transform(new_value);
+  }
+  
+  this->v = new_value;
 }
 
 void sensor::Flex::send() {
-  if (this->value_changed()) {
-    // run dispatcher by injecting the midi interface
-    (*this.*dispatcher)();
-    previous_v = v;
-  }
+  // run dispatcher by injecting the midi interface
+  (*this.*dispatcher)();
 }
 
 void sensor::Flex::debug_dispatcher() {
   Serial.print(this->pin - 54);
   Serial.print(": ");
-  Serial.println(this->v);
+  Serial.print(this->v);
+  Serial.print("   ");
 }
 
 void sensor::Flex::weird_dispatcher() {
