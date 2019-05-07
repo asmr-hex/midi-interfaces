@@ -10,7 +10,7 @@ namespace sensor {
   class Flex : public sensor::Sensor {
   public:
 
-    enum class DispatcherType {Debug, Weirdo};
+    enum class DispatcherType {Debug, Weirdo, MidiControlChange};
 
     Flex(byte pin,
          midi::MidiInterface<HardwareSerial>* midi_interface,
@@ -28,10 +28,12 @@ namespace sensor {
     {
       dispatchers[static_cast<int>(DispatcherType::Debug)] = &Flex::debug_dispatcher;
       dispatchers[static_cast<int>(DispatcherType::Weirdo)] = &Flex::weird_dispatcher;
+      dispatchers[static_cast<int>(DispatcherType::MidiControlChange)] = &Flex::midi_cc_dispatcher;
       
       dispatcher = dispatchers[static_cast<int>(dispatcher_type)];
     };
     void calibrate(sensor::calibration_t calibration_bound);
+    void set_midi_cc_number(int cc_number) { midi_cc_number = cc_number; }
     void setDispatcher(int type);
     void read(bool do_transform=true);
     void send();
@@ -52,7 +54,10 @@ namespace sensor {
     /* dispatchers */
     void debug_dispatcher();
     void weird_dispatcher();
+    void midi_cc_dispatcher();
 
+    int midi_channel = 1;
+    int midi_cc_number = 1;
   };
   
 }

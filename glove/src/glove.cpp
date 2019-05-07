@@ -15,17 +15,26 @@ Glove::Glove(Config config)
 
   // TODO (coco|5.4.2019) incorporate this into config
   byte pins[] = {A0, A1, A2, A3, A4};
+  sensor::range_t finger_calibrations[5] = {
+                                            {99, 242},
+                                            {125, 245},
+                                            {146, 287},
+                                            {189, 254},
+                                            {149, 300},
+  };
+  int finger_cc_numbers[5] = {1,2,11,12,13};
   
   // initialize finger flex sensors
   size_t n = sizeof(fingers)/sizeof(fingers[0]);
   for (byte i = 0; i < n; i++) {
     fingers[i] = new sensor::Flex(pins[i],
                                   midi_interface,
-                                  sensor::Flex::DispatcherType::Debug,
-                                  {400, 1200},
+                                  sensor::Flex::DispatcherType::MidiControlChange,
+                                  finger_calibrations[i],
                                   {0, 127},
                                   false,
                                   true);
+    fingers[i]->set_midi_cc_number(finger_cc_numbers[i]);
   }
 
   // initialize orientation sensor
@@ -42,7 +51,7 @@ void Glove::setup() {
   }
 
   // calibrate fingers
-  this->calibrate(10);
+  // this->calibrate(10);
 }
 
 void Glove::calibrate(int seconds) {
