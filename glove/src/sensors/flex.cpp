@@ -65,5 +65,8 @@ void sensor::Flex::weird_dispatcher() {
 }
 
 void sensor::Flex::midi_cc_dispatcher() {
-  this->midi_interface->sendControlChange(this->midi_cc_number, this->v, this->midi_channel);
+  // debounce redundant messages
+  if (!this->debounce(this->v)) {
+    this->midi_interface->sendControlChange(this->midi_cc_number, this->v, this->midi_channel); 
+  }
 }

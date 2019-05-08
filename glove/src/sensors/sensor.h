@@ -40,8 +40,14 @@ namespace sensor {
     range_t input_range;
     range_t output_range;
     bool invert_values;
+    int debounce_threshold = 3;
     midi::MidiInterface<HardwareSerial>* midi_interface;
     bool debug;
+
+  protected:
+    bool debounce(int current_value);
+
+    int running_average[2] = {0, 0};
   };
 
 }
