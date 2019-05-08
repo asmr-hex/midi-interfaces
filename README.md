@@ -31,3 +31,8 @@ _this process is automated in the included cli tool `arduinoctl`_
 ### troubleshooting
 * remember to always unplug/replug in after flashing
 * if you get `dfu-programmer: no device present.` you need to set the arduino to DFU mode.
+
+# Glove
+### resources
+* [attach multiple BNO055 Sensors to one arduino 1](https://forums.adafruit.com/viewtopic.php?f=25&t=84929#p538623)
+* [attach multiple BNO055 Sensors to one arduino 2](https://forum.arduino.cc/index.php?topic=365597.msg2554732#msg2554732)
