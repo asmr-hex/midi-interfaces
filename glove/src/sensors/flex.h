@@ -33,7 +33,7 @@ namespace sensor {
       dispatcher = dispatchers[static_cast<int>(dispatcher_type)];
     };
     void calibrate(sensor::calibration_t calibration_bound);
-    void set_midi_cc_number(int cc_number) { midi_cc_number = cc_number; }
+    void set_midi_cc_number(byte cc_number) { midi_cc_number = cc_number; }
     void setDispatcher(int type);
     void read(bool do_transform=true);
     void send();
@@ -56,8 +56,8 @@ namespace sensor {
     void weird_dispatcher();
     void midi_cc_dispatcher();
 
-    int midi_channel = 1;
-    int midi_cc_number = 1;
+    byte midi_channel = 1;
+    byte midi_cc_number = 1;
   };
   
 }

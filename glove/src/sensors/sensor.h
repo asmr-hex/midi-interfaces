@@ -17,8 +17,8 @@ namespace sensor {
 
   // range_t defines a one-dimensional value range.
   struct range_t {
-    double max;
-    double min;
+    int min;
+    int max;
   };
 
   enum calibration_t {CalibrateUpperBound, CalibrateLowerBound};

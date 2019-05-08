@@ -5,13 +5,17 @@
 #include "src/glove.h"
 #include "src/config.h"
 
+
+/* MIDI_CREATE_DEFAULT_INSTANCE(); */
+
+bool DEBUG = false;
+
 // declare global glove
 Glove *glove;
 
 void setup() {
   // create configuration
-  Config *config = new Config(true // debug
-                              );
+  Config config(DEBUG);
 
   // instantiate new glove
   glove = new Glove(config);

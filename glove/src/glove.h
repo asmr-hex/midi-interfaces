@@ -12,7 +12,7 @@ enum finger { thumb, index, middle, ring, pinkey };
 
 class Glove {
 public:
-  Glove(Config config = {});
+  Glove(Config config);
   void setup();
   void calibrate(int seconds);
   void read_and_dispatch();
@@ -24,7 +24,7 @@ private:
   sensor::Flex *fingers[5];
   sensor::Orientation *orientation;
 
-  int dt = 500; // ms
+  int dt = 50; // ms
 };
 
 #endif

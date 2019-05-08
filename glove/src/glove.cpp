@@ -22,7 +22,7 @@ Glove::Glove(Config config)
                                             {189, 254},
                                             {149, 300},
   };
-  int finger_cc_numbers[5] = {1,2,11,12,13};
+  byte finger_cc_numbers[5] = {1,2,11,12,13};
   
   // initialize finger flex sensors
   size_t n = sizeof(fingers)/sizeof(fingers[0]);
@@ -42,7 +42,7 @@ Glove::Glove(Config config)
 }
 
 void Glove::setup() {
-  if ( this->config.debug ) {
+  if ( config.debug ) {
     // start serial communication
     Serial.begin(9600);
   } else {
@@ -117,14 +117,12 @@ void Glove::calibrate(int seconds) {
 }
 
 // read all the connected sensors
-void Glove::read_and_dispatch() {
+void Glove::read_and_dispatch() {  
   // read from finger sensors and send messages
   for (sensor::Flex *finger : this->fingers) {
     finger->read();
     finger->send();
   }
-
-  Serial.println("");
 
   delay(this->dt);
 

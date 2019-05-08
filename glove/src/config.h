@@ -6,21 +6,12 @@
 #include "sensors/sensor.h"
 
 
-enum dispatch_funcs { SerialPrint };
-
-// void serial_print_dispatcher(midi::MidiInterface<HardwareSerial>* midi_interface) {
-  
-// }
 
 class Config {
 public:
-  Config(bool debug = false) : debug(debug) {
-    // this->dispatchers[SerialPrint] = serial_print_dispatcher;
-  };
+  Config(bool debug = false) : debug(debug) {}
 
-  //sensor::MidiDispatcher dispatchers[1];
-  bool debug = false;
-  
+  bool debug;
 };
 
 #endif
