@@ -14,7 +14,7 @@ namespace sensor {
 
     Flex(byte pin,
          midi::MidiInterface<HardwareSerial>* midi_interface,
-         DispatcherType dispatcher_type=DispatcherType::Debug,
+         DispatcherType dispatcher_type=DispatcherType::MidiControlChange,
          sensor::range_t input_range={0, 127},
          sensor::range_t output_range={0, 127},
          bool invert_values=true,
@@ -29,17 +29,17 @@ namespace sensor {
       dispatchers[static_cast<int>(DispatcherType::Debug)] = &Flex::debug_dispatcher;
       dispatchers[static_cast<int>(DispatcherType::Weirdo)] = &Flex::weird_dispatcher;
       dispatchers[static_cast<int>(DispatcherType::MidiControlChange)] = &Flex::midi_cc_dispatcher;
-      
-      dispatcher = dispatchers[static_cast<int>(dispatcher_type)];
+
+      if (debug) {
+        dispatcher_type = DispatcherType::Debug;
+      }
+      this->set_dispatcher(dispatcher_type);
     };
     void calibrate(sensor::calibration_t calibration_bound);
     void set_midi_cc_number(byte cc_number) { midi_cc_number = cc_number; }
-    void setDispatcher(int type);
+    void set_dispatcher(DispatcherType type) { dispatcher = dispatchers[static_cast<int>(type)]; }
     void read(bool do_transform=true);
     void send();
-
-    // enum _DispatcherTypes {Serial, Weirdo};
-    // static _DispatcherTypes DispatcherTypes;
 
     typedef void (Flex::*Dispatcher)();
     Dispatcher dispatchers[2];

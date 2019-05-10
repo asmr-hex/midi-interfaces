@@ -27,18 +27,42 @@ Glove::Glove(Config config)
   // initialize finger flex sensors
   size_t n = sizeof(fingers)/sizeof(fingers[0]);
   for (byte i = 0; i < n; i++) {
-    fingers[i] = new sensor::Flex(pins[i],
-                                  midi_interface,
-                                  sensor::Flex::DispatcherType::MidiControlChange,
-                                  finger_calibrations[i],
-                                  {0, 127},
-                                  false,
-                                  true);
+    fingers[i] = new sensor::Flex(pins[i],  // arduino analog pin
+                                  midi_interface, // midi interface
+                                  sensor::Flex::DispatcherType::MidiControlChange, // dispatcher type
+                                  finger_calibrations[i], // input range
+                                  {0, 127}, // output range
+                                  false, // invert values
+                                  config.debug); // debug
     fingers[i]->set_midi_cc_number(finger_cc_numbers[i]);
   }
 
   // initialize orientation sensor
-  // orientation = new sensor::Orientation();
+  sensor::Orientation::Dimension* x = new sensor::Orientation::Dimension(midi_interface, // midi interface
+                                                                         sensor::Orientation::Dimension::DispatcherType::MidiControlChange, // dispatch type
+                                                                         {0, 360}, // input range
+                                                                         {0, 127}, // output range
+                                                                         false, // invert values
+                                                                         true, // apply transform
+                                                                         config.debug); // debug
+  x->set_midi_cc_number(16);
+  sensor::Orientation::Dimension* y = new sensor::Orientation::Dimension(midi_interface, // midi interface
+                                                                         sensor::Orientation::Dimension::DispatcherType::MidiControlChange, // dispatch midi type
+                                                                         {-90, 90}, // input range
+                                                                         {0, 127}, // output range
+                                                                         false, // invert values
+                                                                         true, // apply transform
+                                                                         config.debug); // debug
+  y->set_midi_cc_number(17);
+  sensor::Orientation::Dimension* z = new sensor::Orientation::Dimension(midi_interface, // midi interface
+                                                                         sensor::Orientation::Dimension::DispatcherType::MidiControlChange, // dispatch type
+                                                                         {-180, 180}, // input range
+                                                                         {0, 127}, // output range
+                                                                         false, // invert values
+                                                                         true, // apply transform
+                                                                         config.debug); // debug
+  z->set_midi_cc_number(18);
+  orientation = new sensor::Orientation(x, y, z, config.debug);
 }
 
 void Glove::setup() {
@@ -124,9 +148,9 @@ void Glove::read_and_dispatch() {
     finger->send();
   }
 
-  delay(this->dt);
-
   // read orientation sensor and send messages
-  // this->orientation.read();
-  // this->orientation.send();
+  this->orientation->read();
+  this->orientation->send();
+  
+  delay(this->dt);
 }

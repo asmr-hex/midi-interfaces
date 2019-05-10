@@ -57,7 +57,7 @@ void sensor::Flex::debug_dispatcher() {
   Serial.print(this->pin - 54);
   Serial.print(": ");
   Serial.print(this->v);
-  Serial.print("   ");
+  Serial.println("");
 }
 
 void sensor::Flex::weird_dispatcher() {

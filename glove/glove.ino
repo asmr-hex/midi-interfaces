@@ -6,8 +6,6 @@
 #include "src/config.h"
 
 
-/* MIDI_CREATE_DEFAULT_INSTANCE(); */
-
 bool DEBUG = false;
 
 // declare global glove
