@@ -40,24 +40,24 @@ Glove::Glove(Config config)
   // initialize orientation sensor
   sensor::Orientation::Dimension* x = new sensor::Orientation::Dimension(midi_interface, // midi interface
                                                                          sensor::Orientation::Dimension::DispatcherType::MidiControlChange, // dispatch type
-                                                                         {0, 360}, // input range
-                                                                         {0, 127}, // output range
+                                                                         {{270, 360}, {0, 90}}, // input range
+                                                                         {{0, 64}, {65, 127}}, // output range
                                                                          false, // invert values
                                                                          true, // apply transform
                                                                          config.debug); // debug
   x->set_midi_cc_number(16);
   sensor::Orientation::Dimension* y = new sensor::Orientation::Dimension(midi_interface, // midi interface
                                                                          sensor::Orientation::Dimension::DispatcherType::MidiControlChange, // dispatch midi type
-                                                                         {-90, 90}, // input range
-                                                                         {0, 127}, // output range
+                                                                         {{-90, 0}, {0, 90}}, // input range
+                                                                         {{0, 64}, {65, 127}}, // output range
                                                                          false, // invert values
                                                                          true, // apply transform
                                                                          config.debug); // debug
   y->set_midi_cc_number(17);
   sensor::Orientation::Dimension* z = new sensor::Orientation::Dimension(midi_interface, // midi interface
                                                                          sensor::Orientation::Dimension::DispatcherType::MidiControlChange, // dispatch type
-                                                                         {-180, 180}, // input range
-                                                                         {0, 127}, // output range
+                                                                         {{-180, 0}, {0, 90}}, // input range
+                                                                         {{0, 64}, {65, 127}}, // output range
                                                                          false, // invert values
                                                                          true, // apply transform
                                                                          config.debug); // debug
@@ -76,6 +76,9 @@ void Glove::setup() {
 
   // calibrate fingers
   // this->calibrate(10);
+
+  // calibrate orientation sensors
+  
 }
 
 void Glove::calibrate(int seconds) {

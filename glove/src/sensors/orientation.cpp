@@ -59,15 +59,17 @@ void sensor::Orientation::send() {
 // Constructs an orientation dimension.
 sensor::Orientation::Dimension::Dimension(midi::MidiInterface<HardwareSerial>* midi_interface,
                                           DispatcherType dispatcher_type,
-                                          sensor::range_t input_range,
-                                          sensor::range_t output_range,
+                                          sensor::discontinuous_range_t discont_input_range,
+                                          sensor::discontinuous_range_t discont_output_range,
                                           bool invert_values,
                                           bool apply_transform,
                                           bool debug)
   : apply_transform(apply_transform),
+    discont_input_range(discont_input_range),
+    discont_output_range(discont_output_range),
     sensor::Sensor(midi_interface,
-                   input_range,
-                   output_range,
+                   sensor::range_t{},
+                   sensor::range_t{},
                    invert_values,
                    debug)
 {
@@ -86,20 +88,31 @@ int sensor::Orientation::Dimension::transform(int value) {
     return value;
   }
 
-  // bound the value
-  value = constrain(value, this->input_range.min, this->input_range.max);
-
-  if ( this->invert_values ) {
-    // the input values should be inverted
-    value = (this->input_range.max - value) + this->input_range.min;
+  // since the orientation dimension measurements span a discontinuous boundary
+  // we must map over a discontinuous range
+  if (value >= discont_input_range.lower.min && value <= discont_input_range.lower.max) {
+    value = map(value,
+                this->discont_input_range.lower.min,
+                this->discont_input_range.lower.max,
+                this->discont_output_range.lower.min,
+                this->discont_output_range.lower.max);
+  } else if (value >= discont_input_range.upper.min && value <= discont_input_range.upper.max) {
+    value = map(value,
+                this->discont_input_range.upper.min,
+                this->discont_input_range.upper.max,
+                this->discont_output_range.upper.min,
+                this->discont_output_range.upper.max);    
+  } else {
+    // maybe find the closest boundary?
+    int delta_low = abs(this->discont_input_range.lower.min - value);
+    int delta_high = abs(this->discont_input_range.upper.max - value);
+    if ( delta_low <= delta_high) {
+      value = this->discont_output_range.lower.min;
+    } else {
+      value = this->discont_output_range.upper.max;
+    }
+    
   }
-  
-  // re-map the constrained value to a new range
-  value = map(value,
-              this->input_range.min,
-              this->input_range.max,
-              this->output_range.min,
-              this->output_range.max);
 
   return value;
 }

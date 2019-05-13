@@ -21,6 +21,11 @@ namespace sensor {
     int max;
   };
 
+  struct discontinuous_range_t {
+    range_t lower;
+    range_t upper;
+  };
+
   enum calibration_t {CalibrateUpperBound, CalibrateLowerBound};
   
   class Sensor {
