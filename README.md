@@ -36,3 +36,7 @@ _this process is automated in the included cli tool `arduinoctl`_
 ### resources
 * [attach multiple BNO055 Sensors to one arduino 1](https://forums.adafruit.com/viewtopic.php?f=25&t=84929#p538623)
 * [attach multiple BNO055 Sensors to one arduino 2](https://forum.arduino.cc/index.php?topic=365597.msg2554732#msg2554732)
+* [Glove w/ E-Textiles](https://www.instructables.com/id/ETextile-Glove-With-Conductive-Fabric/)
+* [Hand Substrate Interface](http://jenliujenliu.com/blog/?p=538)
+* [Great Wearable DIY Resource](https://www.kobakant.at/DIY/)
+* [Stretch Circuit](https://www.instructables.com/id/Stretch-Circuit/)
